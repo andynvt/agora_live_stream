@@ -24,7 +24,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final controller = TextEditingController(text: 'lecle');
-  ClientRole _role = ClientRole.Broadcaster;
+  ClientRole role = ClientRole.Audience;
 
   void onJoin() async {
     if (controller.text.isNotEmpty) {
@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
         MaterialPageRoute(
           builder: (context) => Home(
             channelName: controller.text,
-            role: _role,
+            role: role,
           ),
         ),
       );
@@ -53,43 +53,76 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Agora Live Stream'),
       ),
-      body: Center(
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          height: 400,
-          child: Column(
-            children: <Widget>[
-              Row(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(height: 32),
+            Text('Channel name'),
+            SizedBox(height: 8),
+            TextField(
+              controller: controller,
+              decoration: InputDecoration(
+                border: UnderlineInputBorder(
+                  borderSide: BorderSide(width: 1),
+                ),
+                hintText: 'Channel name',
+              ),
+            ),
+            SizedBox(height: 32),
+            Text('Select role'),
+            SizedBox(height: 16),
+            ListTile(
+              title: const Text('Broadcaster'),
+              leading: Radio(
+                value: ClientRole.Broadcaster,
+                groupValue: role,
+                onChanged: (ClientRole? v) {
+                  setState(() {
+                    role = v!;
+                  });
+                },
+              ),
+              onTap: () {
+                setState(() {
+                  role = ClientRole.Broadcaster;
+                });
+              },
+            ),
+            ListTile(
+              title: const Text('Audience'),
+              leading: Radio(
+                value: ClientRole.Audience,
+                groupValue: role,
+                onChanged: (ClientRole? v) {
+                  setState(() {
+                    role = v!;
+                  });
+                },
+              ),
+              onTap: () {
+                setState(() {
+                  role = ClientRole.Audience;
+                });
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Row(
                 children: <Widget>[
                   Expanded(
-                      child: TextField(
-                    controller: controller,
-                    decoration: InputDecoration(
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide(width: 1),
-                      ),
-                      hintText: 'Channel name',
+                    child: MaterialButton(
+                      onPressed: onJoin,
+                      child: Text('Join'),
+                      color: Colors.blueAccent,
+                      textColor: Colors.white,
                     ),
-                  ))
+                  )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
-                child: Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: MaterialButton(
-                        onPressed: onJoin,
-                        child: Text('Join'),
-                        color: Colors.blueAccent,
-                        textColor: Colors.white,
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );
